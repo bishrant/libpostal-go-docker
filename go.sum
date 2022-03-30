@@ -1,0 +1,6 @@
+github.com/bazelbuild/rules_go v0.31.0 h1:8/MDe6zCE7nYKXhlbamM1izUgJjw2ce7M5kd4QKF/3Y=
+github.com/bazelbuild/rules_go v0.31.0/go.mod h1:MC23Dc/wkXEyk3Wpq6lCqz0ZAYOZDw2DR5y3N1q2i7M=
+github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
+github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/opendoor-labs/gopostal v0.0.0-20210331215832-b226e5e78a1b h1:2TNYWQzwBg7scgj1XN7oUXEkTfFo2Sjl4tSuKZ1Gv1o=
+github.com/opendoor-labs/gopostal v0.0.0-20210331215832-b226e5e78a1b/go.mod h1:EsiZJe0/JWWfh0izG2/39cPrxaT/S9Pagxd8QlgP3LI=
