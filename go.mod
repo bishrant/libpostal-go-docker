@@ -1,4 +1,4 @@
-module libpostal-go-docker
+module github.com/bishrant/libpostal-go-docker
 
 go 1.17
 
