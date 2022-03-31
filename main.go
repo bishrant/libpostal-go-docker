@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	expand "github.com/opendoor-labs/gopostal/expand"
-	parser "github.com/opendoor-labs/gopostal/parser"
+	expand "github.com/openvenues/gopostal/expand"
+	parser "github.com/openvenues/gopostal/parser"
 )
 
 type Request struct {
