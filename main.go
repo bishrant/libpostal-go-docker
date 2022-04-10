@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -18,6 +19,9 @@ import (
 type Request struct {
 	Query string `json:"query"`
 }
+type MultipleRequest struct {
+	Query []string `json:"query"`
+}
 
 func main() {
 	host := os.Getenv("LISTEN_HOST")
@@ -26,7 +30,7 @@ func main() {
 	}
 	port := os.Getenv("LISTEN_PORT")
 	if port == "" {
-		port = "8080"
+		port = "8090"
 	}
 	listenSpec := fmt.Sprintf("%s:%s", host, port)
 
@@ -37,6 +41,7 @@ func main() {
 	router.HandleFunc("/health", HealthHandler).Methods("GET")
 	router.HandleFunc("/expand", ExpandHandler).Methods("POST")
 	router.HandleFunc("/parser", ParserHandler).Methods("POST")
+	router.HandleFunc("/multipleparser", MultipleParseHandler).Methods("POST")
 
 	s := &http.Server{Addr: listenSpec, Handler: router}
 	go func() {
@@ -79,15 +84,38 @@ func ExpandHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ParserHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("listening on post")
 	w.Header().Set("Content-Type", "application/json")
-
 	var req Request
-
 	q, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(q, &req)
-
 	parsed := parser.ParseAddress(req.Query)
 	parseThing, _ := json.Marshal(parsed)
 	w.Write(parseThing)
+}
+
+type OutputArray struct {
+	Input  string                   `json:"input"`
+	Output []parser.ParsedComponent `json:"output"`
+}
+
+type ParserOutput struct {
+	Response []OutputArray `json:"response"`
+}
+
+func MultipleParseHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var req MultipleRequest
+	var out []OutputArray
+	q, _ := ioutil.ReadAll(r.Body)
+	json.Unmarshal(q, &req)
+	for _, s := range req.Query {
+		parsed := parser.ParseAddress(s)
+		out0 := OutputArray{Input: s, Output: parsed}
+		out = append(out, out0)
+	}
+	pagesJson, err := json.Marshal(out)
+	if err != nil {
+		log.Fatal("Cannot encode to JSON ", err)
+	}
+	w.Write([]byte(string(pagesJson)))
 }
