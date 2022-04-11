@@ -19,8 +19,12 @@ import (
 type Request struct {
 	Query string `json:"query"`
 }
+type AddressRequest struct {
+	A string `json:"a"`
+	C string `json:"c"`
+}
 type MultipleRequest struct {
-	Query []string `json:"query"`
+	Addresses []AddressRequest `json:"addresses"`
 }
 
 func main() {
@@ -94,6 +98,7 @@ func ParserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 type OutputArray struct {
+	C      string                   `json:"c"`
 	Input  string                   `json:"input"`
 	Output []parser.ParsedComponent `json:"output"`
 }
@@ -108,9 +113,9 @@ func MultipleParseHandler(w http.ResponseWriter, r *http.Request) {
 	var out []OutputArray
 	q, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(q, &req)
-	for _, s := range req.Query {
-		parsed := parser.ParseAddress(s)
-		out0 := OutputArray{Input: s, Output: parsed}
+	for _, s := range req.Addresses {
+		parsed := parser.ParseAddress(s.A)
+		out0 := OutputArray{Input: s.A, C: s.C, Output: parsed}
 		out = append(out, out0)
 	}
 	pagesJson, err := json.Marshal(out)
